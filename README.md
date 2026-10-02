@@ -4,23 +4,26 @@
 
 [English](README.en.md)
 
-**R3Ds VIA-L**, kurz **VIA-L**, ist eine eigenständige macOS-App für die **Online-Versionen** von [VIA](https://usevia.app/) und [Vial](https://vial.rocks/). Sie lädt die Originalseiten in einer eingebetteten Chromium-Ansicht und stellt eine lokale Auswahl für WebHID-Geräte bereit. VIA-L ist ein unabhängiges Projekt und gehört weder zu VIA noch zu Vial. Die Webseiten und ihre Tastaturfunktionen sind nicht Teil dieses Repositories oder der App. Eine Internetverbindung ist erforderlich.
+**R3Ds VIA-L**, kurz **VIA-L**, bringt [VIA](https://usevia.app/) und [Vial](https://vial.rocks/) in eine eigenständige macOS-App. Verbinde deine kompatible Tastatur, passe Tastenbelegungen an und verwalte deine Layouts über die vertraute Oberfläche des jeweiligen Tools. Zwischen VIA und Vial wechselst du direkt in der App.
 
-Die aktuelle Version ist **0.2.0** für Apple Silicon ab macOS 13. Das signierte und notarisierte ZIP wird nach Veröffentlichung unter [Releases](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) angeboten. Es gibt keinen automatischen Updater. Für neue Versionen die Release-Seite prüfen und die App nach regulärem Beenden austauschen. Websitedaten und Einstellungen bleiben im bisherigen macOS-Benutzerprofil erhalten.
+VIA-L lädt die **Online-Versionen** beider Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört weder zu VIA noch zu Vial.
+
+**Download:** [VIA-L für macOS](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) · Version **0.2.0** · Apple Silicon · macOS 13 oder neuer · signiert und von Apple notarisiert.
+
+Das ZIP entpacken und **VIA-L.app** in den Programme-Ordner verschieben. Neue Versionen werden über die Release-Seite bereitgestellt. Zum Aktualisieren die App regulär beenden und austauschen; Websitedaten und Einstellungen bleiben erhalten.
 
 ## Verwendung
 
 1. VIA oder Vial in der oberen Leiste wählen. Beim Wechsel wird die bisherige Webansicht geschlossen; ungesicherte Änderungen auf der Webseite können verloren gehen.
 2. Auf der Originalseite eine Verbindung anfordern: bei VIA über **„Gerät autorisieren +“**, bei Vial über **„Start Vial“**. In VIA-L das angebotene Gerät markieren und **„Verbinden“** wählen. Die Auswahl gibt kein Gerät ohne Bestätigung frei.
-3. Import und Export mit den Funktionen der jeweiligen Webseite durchführen. Für eine VIA-JSON-Datei die originale Sideload-Funktion von VIA verwenden. VIA-L interpretiert oder verändert Layoutdateien nicht selbst.
+3. Tastenbelegungen und Layouts direkt in VIA oder Vial anpassen.
+4. Import und Export über die Funktionen des jeweiligen Tools nutzen. Für eine VIA-JSON-Datei steht die Sideload-Funktion von VIA zur Verfügung.
 
 Die App-Leiste ist während eines Tastentests bewusst aus der Tab-Reihenfolge genommen und per Maus bedienbar. Einstellungen und Geräteauswahl bleiben per Tastatur bedienbar. Beim Löschen von Websitedaten muss der Name des betroffenen Tools exakt eingegeben werden. Der Reset betrifft nur dieses Tool.
 
-Ein Nutzer hat die Verbindung mit VIA, das Sideloading einer VIA-JSON-Datei und Vial in der App erprobt. Eine vollständige Prüfung des Schreibens und Wiederherstellens eines Tastaturlayouts für verschiedene Geräte und Firmwarestände liegt nicht vor. Vor Änderungen an einer Tastatur das bestehende Layout mit einem bewährten Werkzeug sichern und die Wiederherstellung prüfen.
-
 ## Entwicklung
 
-Voraussetzungen: macOS, Node.js ab 22.12 und npm. Der Prototyp wird auf Apple Silicon entwickelt.
+Voraussetzungen: macOS, Node.js ab 22.12 und npm. Die Entwicklung erfolgt auf Apple Silicon.
 
 ```sh
 npm ci

@@ -4,19 +4,22 @@
 
 [Deutsch](README.md)
 
-**R3Ds VIA-L**, or **VIA-L** for short, is an independent macOS app for the **online versions** of [VIA](https://usevia.app/) and [Vial](https://vial.rocks/). It loads their original websites in an embedded Chromium view and provides a local WebHID device chooser. VIA-L is not affiliated with VIA or Vial. Their websites and keyboard configuration tools are not bundled with this repository or app. An internet connection is required.
+**R3Ds VIA-L**, or **VIA-L** for short, brings [VIA](https://usevia.app/) and [Vial](https://vial.rocks/) into a standalone macOS app. Connect your compatible keyboard, remap keys, and manage layouts through each tool's familiar interface. Switch between VIA and Vial directly in the app.
 
-Version **0.2.0** targets Apple Silicon and macOS 13 or later. Once published, a signed and notarized ZIP will be available from [Releases](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest). There is no automatic updater. Check the release page for updates and quit the app before replacing it. Website data and preferences remain in the existing macOS user profile.
+VIA-L loads the **online versions** of both tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with VIA or Vial.
+
+**Download:** [VIA-L for macOS](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) · Version **0.2.0** · Apple Silicon · macOS 13 or later · signed and notarized by Apple.
+
+Extract the ZIP and move **VIA-L.app** to your Applications folder. Updates are available from the release page. To update, quit the app and replace it; website data and preferences are preserved.
 
 ## Use
 
 1. Choose VIA or Vial in the top bar. Switching closes the previous website view; unsaved changes on that site may be lost.
 2. Request a connection on the original site: **“Authorize device +”** in VIA or **“Start Vial”** in Vial. Select the offered device in VIA-L, then choose **Connect**. No device is granted without this selection.
-3. Use each website's own import and export functions. To load a VIA JSON file, use VIA's original sideload feature. VIA-L does not parse or alter layout files itself.
+3. Remap keys and adjust layouts directly in VIA or Vial.
+4. Use each tool's import and export functions. To load a VIA JSON file, use VIA's sideload feature.
 
 The app toolbar is intentionally outside the tab sequence while testing keys and is operated with a pointer. Settings and the device chooser remain keyboard accessible. Resetting website data requires entering the exact tool name; it affects only that tool.
-
-A user has tried a VIA connection, VIA JSON sideloading, and Vial in the app. A complete write and restore test across keyboard models and firmware has not been established. Before changing a keyboard, back up its existing layout with a known working tool and verify that it can be restored.
 
 ## Development
 
