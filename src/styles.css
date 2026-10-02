@@ -1,0 +1,41 @@
+:root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #e6edf5; background: #101923; }
+button, select, input { font: inherit; }
+button { cursor: pointer; }
+.toolbar { height: 70px; display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: #182534; border-bottom: 1px solid #31465a; }
+.brand { display: flex; gap: 8px; align-items: center; font-weight: 700; white-space: nowrap; }
+.brand img { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; }
+nav { display: flex; padding: 3px; background: #0e1925; border-radius: 9px; }
+.tool { color: #aebdcc; border: 0; background: transparent; border-radius: 7px; padding: 8px 16px; }
+.tool.selected { color: #fff; background: #34516e; }
+.status { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #aebdcc; font-size: 12px; }
+.status.busy::before { content: '● '; color: #e6bf6a; }
+.icon, select { color: #e6edf5; background: #25384c; border: 1px solid #415a72; border-radius: 7px; height: 34px; }
+.icon { width: 36px; font-size: 20px; }
+.zoom-label { font-size: 12px; color: #aebdcc; }
+select { padding: 0 7px; }
+.settings { position: fixed; top: 62px; right: 16px; z-index: 5; width: 310px; padding: 20px; background: #203145; border: 1px solid #49627a; border-radius: 12px; box-shadow: 0 16px 36px #0009; }
+.settings p { color: #b9c9d9; font-size: 13px; line-height: 1.45; }
+.settings button, .actions button, .device { color: #e6edf5; border: 1px solid #526d86; background: #2b435a; border-radius: 8px; padding: 9px 12px; }
+.settings input { width: 100%; margin: 9px 0 14px; color: #e6edf5; background: #101e2d; border: 1px solid #526d86; border-radius: 7px; padding: 9px; }
+.settings .actions { justify-content: flex-start; }
+.settings button:disabled { opacity: 0.45; cursor: default; }
+.overlay { position: fixed; inset: 70px 0 0; display: grid; place-items: center; z-index: 3; background: #101923; }
+.dialog { width: min(580px, calc(100vw - 48px)); padding: 26px; border: 1px solid #405a73; border-radius: 14px; background: #1d2c3c; box-shadow: 0 22px 50px #0008; }
+.dialog h1 { margin: 0 0 12px; font-size: 22px; }
+.dialog p { color: #c2d0de; line-height: 1.5; }
+.choices { display: grid; gap: 8px; max-height: 45vh; overflow: auto; margin: 20px 0; }
+.device { text-align: left; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.device input { flex: 0 0 auto; accent-color: #80baff; }
+.device:has(input:checked) { border-color: #80baff; background: #304c65; }
+.actions button:disabled { opacity: 0.45; cursor: default; }
+#grant:not(:disabled) { background: #246096; border-color: #3a86c3; }
+.device:hover, .actions button:hover, .settings button:hover { background: #3a5c7b; }
+.address { display: block; padding: 14px; color: #dbecfa; overflow-wrap: anywhere; background: #101e2d; border-radius: 8px; }
+.empty { font-size: 13px; }
+.actions { display: flex; justify-content: flex-end; gap: 8px; }
+#open { background: #246096; border-color: #3a86c3; }
+[hidden] { display: none !important; }
+@media (max-width: 1100px) { .brand span { display: none; } }
+.toolbar button, .toolbar nav, .toolbar select, .toolbar .zoom-label { flex-shrink: 0; }
