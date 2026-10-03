@@ -8,7 +8,7 @@
 
 VIA-L lädt die **Online-Versionen** beider Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört weder zu VIA noch zu Vial.
 
-**Download:** [VIA-L für macOS](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) · Version **0.2.0** · Apple Silicon · macOS 13 oder neuer · signiert und von Apple notarisiert.
+**Download:** [VIA-L für macOS](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) · Version **0.2.1** · Apple Silicon · macOS 13 oder neuer · signiert und von Apple notarisiert.
 
 Das ZIP entpacken und **VIA-L.app** in den Programme-Ordner verschieben. Neue Versionen werden über die Release-Seite bereitgestellt. Zum Aktualisieren die App regulär beenden und austauschen; Websitedaten und Einstellungen bleiben erhalten.
 
@@ -34,16 +34,19 @@ npm start
 npm test            # Build und gezielte Tests für Regeln und Zustände
 npm run test:app    # Laufzeittest mit isoliertem Entwicklungsprofil
 npm run test:focus  # Fokus- und Reset-Test mit isoliertem Entwicklungsprofil
+npm run test:window # Fensterstart auf realer und simulierten kleinen Arbeitsflächen
 npm run package:mac # lokales App-Bundle
 ```
 
 `npm start` baut den TypeScript-Code und startet Electron. Der erste Bezug von Electron und die beiden Webseiten erfordern Internetzugriff. Tests mit Testprofilen verwenden eine eigene Datenablage und greifen nicht auf das reguläre Benutzerprofil zu.
 
+VIA-L startet auf dem Bildschirm unter dem Mauszeiger mit **1676 × 1124** macOS-Punkten, sofern die nutzbare Arbeitsfläche diese Größe zulässt. Andernfalls wird das Fenster unter Berücksichtigung von Menüleiste und Dock passend begrenzt und zentriert. Bei jedem Start wird die Zielgröße neu bestimmt; manuell gespeicherte Fenstergrenzen werden ignoriert. Einstellungen, Zoom und Websitedaten bleiben erhalten.
+
 ## Schutz und Daten
 
 Die Online-Seiten laufen in isolierten Webansichten ohne Node-Integration oder App-Preload. Dokumentnavigation ist auf die jeweilige HTTPS-Origin beschränkt. Externe Links benötigen eine Bestätigung, bevor der Standardbrowser sie öffnet. Jede Seite erhält eine eigene persistente Chromium-Partition. Der Wechsel schließt die vorherige Webansicht. WebHID wird nur für das aktive Tool und eine konkrete Geräteauswahl zugelassen; andere Berechtigungen werden standardmäßig abgelehnt.
 
-Einstellungen, Fenstergröße, Zoom und Websitedaten werden lokal im Benutzerprofil gespeichert. VIA-L hat keine eigene Cloud, keine eigene Telemetrie und keinen Hintergrunddienst. Die Online-Seiten können eigene Ressourcen und Dienste nutzen; deren Datenverarbeitung liegt bei den jeweiligen Betreibern. Der Reset in den Einstellungen löscht die Daten des gewählten Tools und wechselt zu einer neuen Partition. Nach einem vollständigen App-Neustart ist eine erneute Gerätefreigabe erforderlich.
+Einstellungen, Zoom und Websitedaten werden lokal im Benutzerprofil gespeichert. VIA-L hat keine eigene Cloud, keine eigene Telemetrie und keinen Hintergrunddienst. Die Online-Seiten können eigene Ressourcen und Dienste nutzen; deren Datenverarbeitung liegt bei den jeweiligen Betreibern. Der Reset in den Einstellungen löscht die Daten des gewählten Tools und wechselt zu einer neuen Partition. Nach einem vollständigen App-Neustart ist eine erneute Gerätefreigabe erforderlich.
 
 VIA-L nutzt für bestehende Installationen weiterhin das bisherige macOS-Profil **Keyboard Web Tools**. Bei der Umbenennung werden Profildaten weder verschoben noch gelöscht. Die technischen Partitionsnamen bleiben aus demselben Grund erhalten.
 

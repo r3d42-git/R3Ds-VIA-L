@@ -1,7 +1,7 @@
 {
   "name": "r3ds-via-l",
   "productName": "VIA-L",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Independent macOS host for the online VIA and Vial keyboard tools",
   "license": "GPL-3.0-or-later",
@@ -20,7 +20,8 @@
     "test": "npm run build && node --test tests/*.test.cjs",
     "test:app": "npm run build && node tests/app-smoke.cjs",
     "package:mac": "npm run build && node scripts/package.mjs",
-    "test:focus": "npm run build && node tests/focus-smoke.cjs"
+    "test:focus": "npm run build && node tests/focus-smoke.cjs",
+    "test:window": "npm run build && node tests/window-smoke.cjs"
   },
   "engines": {
     "node": ">=22.12"

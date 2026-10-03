@@ -183,20 +183,31 @@ async function remoteJS(js, gesture=false) {
       await ui.getByRole('button',{name:'VIA',exact:true}).click();
       await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://usevia.app/');
     });
-    await check('window resize persists', async () => {
+    await check('window can be resized during the session', async () => {
       await app.evaluate(({BrowserWindow}) => BrowserWindow.getAllWindows()[0].setSize(980,720));
-      await expect.poll(() => JSON.parse(fs.readFileSync(path.join(data,'preferences.json'),'utf8')).bounds.width).toBe(980);
+      await expect.poll(() => app.evaluate(({BrowserWindow}) => BrowserWindow.getAllWindows()[0].getSize())).toEqual([980,720]);
       await ui.screenshot({path:path.join(output,'compact-toolbar.png')});
     });
     await app.close(); app = null;
     const preferences = JSON.parse(fs.readFileSync(path.join(data,'preferences.json'),'utf8'));
     assert.equal(preferences.tool,'via');
     checks.push('preferences saved on disk');
+    // A profile from an older version may still contain window bounds.
+    preferences.bounds = {width:980, height:720};
+    fs.writeFileSync(path.join(data,'preferences.json'), JSON.stringify(preferences));
     app = await electron.launch({args:[root], cwd:root, env, timeout:30000});
     const restored = await app.firstWindow();
     await expect(restored.getByRole('button',{name:'VIA',exact:true})).toHaveAttribute('aria-pressed','true');
-    assert.deepEqual(await app.evaluate(({BrowserWindow}) => BrowserWindow.getAllWindows()[0].getSize()), [980,720]);
-    checks.push('last tool and window size restored after restart');
+    const geometry = await app.evaluate(({BrowserWindow, screen}) => {
+      const bounds = BrowserWindow.getAllWindows()[0].getBounds();
+      return { bounds, workArea: screen.getDisplayMatching(bounds).workArea };
+    });
+    assert.equal(geometry.bounds.width, Math.min(1676, geometry.workArea.width));
+    assert.equal(geometry.bounds.height, Math.min(1124, geometry.workArea.height));
+    assert.ok(geometry.bounds.x >= geometry.workArea.x && geometry.bounds.y >= geometry.workArea.y);
+    assert.ok(geometry.bounds.x + geometry.bounds.width <= geometry.workArea.x + geometry.workArea.width);
+    assert.ok(geometry.bounds.y + geometry.bounds.height <= geometry.workArea.y + geometry.workArea.height);
+    checks.push('last tool restored; legacy window size ignored after restart');
   } catch (error) {
     if (app) {
       const local = app.context().pages().find(page => page.url().startsWith('file:'));

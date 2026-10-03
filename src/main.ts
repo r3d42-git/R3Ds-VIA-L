@@ -1,13 +1,13 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, session, shell, WebContentsView, type Session, type WebContents } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, screen, session, shell, WebContentsView, type Session, type WebContents } from 'electron';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { HidChooser, type ChoiceSnapshot, type HidChoice } from './chooser';
 import { isAllowedDocument, isExternalHttpUrl, isTool, mayUseHid, TOOLS, type Tool } from './policy';
+import { fitWindowToWorkArea } from './window-geometry';
 
 interface Preferences {
   tool: Tool;
-  bounds: { width: number; height: number };
   zoom: Record<Tool, number>;
   generation: Record<Tool, number>;
 }
@@ -22,7 +22,7 @@ interface PublicState {
 }
 
 const DEFAULTS: Preferences = {
-  tool: 'via', bounds: { width: 1676, height: 1124 },
+  tool: 'via',
   zoom: { via: 1, vial: 1 }, generation: { via: 0, vial: 0 },
 };
 const TOOLBAR_HEIGHT = 70;
@@ -59,10 +59,6 @@ function readPreferences(): Preferences {
     const data = JSON.parse(readFileSync(preferencesPath(), 'utf8')) as Partial<Preferences>;
     return {
       tool: isTool(data.tool) ? data.tool : DEFAULTS.tool,
-      bounds: {
-        width: Math.max(800, Math.min(3000, Number(data.bounds?.width) || DEFAULTS.bounds.width)),
-        height: Math.max(620, Math.min(2200, Number(data.bounds?.height) || DEFAULTS.bounds.height)),
-      },
       zoom: {
         via: validZoom(data.zoom?.via), vial: validZoom(data.zoom?.vial),
       },
@@ -396,9 +392,10 @@ function createWindow(): void {
   ]));
   preferences = readPreferences();
   activeTool = preferences.tool;
+  const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  const bounds = fitWindowToWorkArea(display.workArea);
   const win = new BrowserWindow({
-    title: 'R3Ds VIA-L', width: preferences.bounds.width, height: preferences.bounds.height,
-    minWidth: 800, minHeight: 620, backgroundColor: '#101923',
+    title: 'R3Ds VIA-L', ...bounds, backgroundColor: '#101923',
     webPreferences: {
       preload: join(__dirname, 'preload.js'), sandbox: true, contextIsolation: true,
       nodeIntegration: false, webSecurity: true, webviewTag: false,
@@ -413,11 +410,6 @@ function createWindow(): void {
   win.webContents.on('will-redirect', event => event.preventDefault());
   win.on('resize', () => {
     boundsRemote();
-    if (!win.isDestroyed() && !win.isMinimized()) {
-      const size = win.getSize();
-      preferences.bounds = { width: size[0], height: size[1] };
-      savePreferences();
-    }
   });
   win.on('closed', () => {
     closeRemote();
