@@ -8,7 +8,9 @@
 
 VIA-L loads the **online versions** of both tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with VIA or Vial.
 
-**Download:** [VIA-L for macOS](https://github.com/r3d42-git/R3Ds-VIA-L/releases/latest) · Version **0.2.1** · Apple Silicon · macOS 13 or later · signed and notarized by Apple.
+**Downloads for version 0.2.2:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.2/VIA-L-0.2.2-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.2/VIA-L-0.2.2-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
+
+Check ** → About This Mac**: choose Apple Silicon for an Apple chip, or Intel for an Intel processor. Both ZIPs contain the same app built for the respective processor.
 
 Extract the ZIP and move **VIA-L.app** to your Applications folder. Updates are available from the release page. To update, quit the app and replace it; website data and preferences are preserved.
 
@@ -35,7 +37,9 @@ npm test            # build and focused policy/state tests
 npm run test:app    # runtime test using an isolated development profile
 npm run test:focus  # focus and reset test using an isolated development profile
 npm run test:window # window startup with real and simulated small work areas
-npm run package:mac # local app bundle
+npm run package:mac # local app bundle for the current Mac
+npm run package:mac -- --arch=x64 # local Intel app bundle
+npm run package:mac -- --arch=arm64 # local Apple Silicon app bundle
 ```
 
 `npm start` builds the TypeScript code and launches Electron. Downloading Electron for the first time and loading the websites require internet access. Test profiles are separate from the regular user profile.

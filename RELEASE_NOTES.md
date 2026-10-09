@@ -1,5 +1,10 @@
-VIA-L 0.2.1 startet mit 1676 × 1124 macOS-Punkten auf dem Bildschirm unter dem Mauszeiger, sofern dessen nutzbare Arbeitsfläche ausreicht. Andernfalls wird das Fenster passend zu Menüleiste und Dock begrenzt und zentriert. Die Fenstergröße wird bei jedem Start neu bestimmt; manuell gespeicherte Fenstergrenzen werden ignoriert. Einstellungen, Zoom und Websitedaten bleiben erhalten.
+VIA-L 0.2.2 ergänzt Intel-Macs. Es gibt zwei getrennte Downloads mit denselben Funktionen:
 
-Apple Silicon (arm64), macOS 13 oder neuer; Internetverbindung erforderlich. Developer-ID-signiert und von Apple notarisiert; das Ticket ist an der App angeheftet.
+- **Apple Silicon:** `VIA-L-0.2.2-macOS-arm64.zip` für Macs mit Apple-Chip.
+- **Intel:** `VIA-L-0.2.2-macOS-x64.zip` für Intel-Macs (x86_64).
 
-Zum Aktualisieren VIA-L regulär beenden, das ZIP entpacken und **VIA-L.app** im Programme-Ordner ersetzen. Nach dem Neustart die Tastatur erneut autorisieren.
+Beide Varianten benötigen **macOS 13 oder neuer** und eine Internetverbindung. Sie sind mit Developer ID signiert und von Apple notarisiert; das Ticket ist an der jeweiligen App angeheftet. Zu jedem ZIP gehört eine SHA-256-Prüfsumme.
+
+Zum Aktualisieren VIA-L regulär beenden, das zum Mac passende ZIP entpacken und **VIA-L.app** im Programme-Ordner ersetzen. Websitedaten und Einstellungen bleiben erhalten. Nach dem Neustart die Tastatur erneut autorisieren.
+
+Die Intel-Architektur sämtlicher gebündelter Mach-O-Dateien sowie Signatur, Notarisierung und Gatekeeper werden am fertigen ZIP geprüft. Der Nutzer hat den erfolgreichen Start auf einem physischen Intel-Mac mit macOS 26 bestätigt. Eine vollständige WebHID-Hardwareabnahme auf Intel ist noch nicht separat dokumentiert.

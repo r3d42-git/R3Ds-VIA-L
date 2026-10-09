@@ -2,7 +2,9 @@ import { packager } from '@electron/packager';
 import { readFileSync, mkdirSync, cpSync, mkdtempSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
+import { architectureOption, validateArchitecture } from './release-architectures.mjs';
 
+const arch = architectureOption(process.argv.slice(2)) || validateArchitecture(process.arch);
 if (process.platform !== 'darwin') throw new Error('macOS-Paketierung bitte auf macOS ausführen.');
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 const outArg = process.argv.slice(2).find(value => value.startsWith('--out='));
@@ -18,7 +20,7 @@ try {
   mkdirSync(out, { recursive: true });
   const paths = await packager({
     dir: staging, out, name: pkg.productName,
-    platform: 'darwin', arch: process.arch,
+    platform: 'darwin', arch,
     electronVersion: pkg.devDependencies.electron,
     appBundleId: 'io.github.r3d42-git.via-l',
     appCategoryType: 'public.app-category.utilities',
