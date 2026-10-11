@@ -8,7 +8,7 @@
 
 VIA-L loads the **online versions** of both tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with VIA or Vial.
 
-**Downloads for version 0.2.2:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.2/VIA-L-0.2.2-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.2/VIA-L-0.2.2-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
+**Downloads for version 0.2.3:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
 
 Check ** → About This Mac**: choose Apple Silicon for an Apple chip, or Intel for an Intel processor. Both ZIPs contain the same app built for the respective processor.
 
