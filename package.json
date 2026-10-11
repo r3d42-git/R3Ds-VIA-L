@@ -28,9 +28,9 @@
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",
-    "@playwright/test": "1.63.0",
-    "@types/node": "26.6.4",
-    "electron": "44.5.1",
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.5",
+    "electron": "44.7.0",
     "typescript": "7.0.2"
   },
   "displayName": "R3Ds VIA-L"
