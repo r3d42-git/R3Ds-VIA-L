@@ -1,12 +1,14 @@
-export type Tool = 'via' | 'vial';
+export type Tool = 'via' | 'vial' | 'venom' | 'wootility';
 
 export const TOOLS: Record<Tool, { label: string; url: string; origin: string }> = {
   via: { label: 'VIA', url: 'https://usevia.app/', origin: 'https://usevia.app' },
   vial: { label: 'Vial', url: 'https://vial.rocks/', origin: 'https://vial.rocks' },
+  venom: { label: 'Venom', url: 'https://venom.how/', origin: 'https://venom.how' },
+  wootility: { label: 'Wootility', url: 'https://wootility.io/', origin: 'https://wootility.io' },
 };
 
 export function isTool(value: unknown): value is Tool {
-  return value === 'via' || value === 'vial';
+  return value === 'via' || value === 'vial' || value === 'venom' || value === 'wootility';
 }
 
 /** URLs are parsed rather than compared by prefix, so lookalike hosts and ports fail. */

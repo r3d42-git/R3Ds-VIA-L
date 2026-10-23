@@ -1,9 +1,9 @@
 {
   "name": "r3ds-via-l",
   "productName": "VIA-L",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
-  "description": "Independent macOS host for the online VIA and Vial keyboard tools",
+  "description": "Independent macOS host for the online VIA, Vial, Venom and Wootility keyboard tools",
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",

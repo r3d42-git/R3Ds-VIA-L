@@ -1,11 +1,11 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { isTool, isAllowedDocument, isExternalHttpUrl, mayUseHid } = require('../dist/policy.js');
+const { TOOLS, isTool, isAllowedDocument, isExternalHttpUrl, mayUseHid } = require('../dist/policy.js');
 const { HidChooser } = require('../dist/chooser.js');
 
 test('documents require exact per-tool HTTPS origin', () => {
-  for (const tool of ['via', 'vial']) {
-    const host = tool === 'via' ? 'usevia.app' : 'vial.rocks';
+  for (const tool of Object.keys(TOOLS)) {
+    const host = new URL(TOOLS[tool].url).host;
     assert.ok(isAllowedDocument(tool, `https://${host}/path?a=1#hash`));
     assert.ok(isAllowedDocument(tool, `https://${host}:443/`));
     for (const value of [`http://${host}/`, `https://${host}.evil.test/`,
@@ -13,28 +13,34 @@ test('documents require exact per-tool HTTPS origin', () => {
       `https://${host}:8443/`, `https://sub.${host}/`, `https://${host}./`,
       'javascript:alert(1)', 'data:text/html,hello', 'file:///etc/passwd',
       `blob:https://${host}/id`, 'about:blank', '//usevia.app', 'broken',
-      tool === 'via' ? 'https://vial.rocks/' : 'https://usevia.app/']) {
+      ...Object.entries(TOOLS).filter(([other]) => other !== tool).map(([, value]) => value.url)]) {
       assert.equal(isAllowedDocument(tool, value), false, value);
     }
   }
 });
 
 test('only literal tool identifiers and http(s) external URLs', () => {
-  for (const value of ['via', 'vial']) assert.ok(isTool(value));
+  for (const value of ['via', 'vial', 'venom', 'wootility']) assert.ok(isTool(value));
   for (const value of ['__proto__', null, {}, 'VIA', '']) assert.equal(isTool(value), false);
   for (const value of ['https://docs.qmk.fm/', 'http://localhost/help']) assert.ok(isExternalHttpUrl(value));
   for (const value of ['mailto:a@b.com', 'file:///tmp/test', 'javascript:alert(1)', 'data:text/html,x', 'https://user:pass@example.com']) assert.equal(isExternalHttpUrl(value), false);
 });
 
 test('HID gate requires current contents, main frame, matching requesting URL AND origin', () => {
-  assert.ok(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app', true, true));
-  assert.ok(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app/', true, true));
-  assert.equal(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app/evil', true, true), false);
-  assert.equal(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app/?query', true, true), false);
-  assert.equal(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app', false, true), false);
-  assert.equal(mayUseHid('via', 'https://usevia.app/', 'https://usevia.app', true, false), false);
-  assert.equal(mayUseHid('via', 'https://vial.rocks/', 'https://usevia.app', true, true), false);
-  assert.equal(mayUseHid('via', 'https://usevia.app/', 'https://evil.test', true, true), false);
+  for (const [tool, {url, origin}] of Object.entries(TOOLS)) {
+    assert.ok(mayUseHid(tool, url, origin, true, true));
+    assert.ok(mayUseHid(tool, url, `${origin}/`, true, true));
+    for (const untrustedOrigin of [`${origin}/evil`, `${origin}/?query`, `${origin}/#hash`, 'https://evil.test']) {
+      assert.equal(mayUseHid(tool, url, untrustedOrigin, true, true), false);
+    }
+    assert.equal(mayUseHid(tool, url, origin, false, true), false);
+    assert.equal(mayUseHid(tool, url, origin, true, false), false);
+    for (const [other, site] of Object.entries(TOOLS)) {
+      if (tool === other) continue;
+      assert.equal(mayUseHid(tool, site.url, origin, true, true), false);
+      assert.equal(mayUseHid(tool, url, site.origin, true, true), false);
+    }
+  }
 });
 
 const device = (id) => ({deviceId:id, name:'Keyboard', vendorId:1, productId:2});

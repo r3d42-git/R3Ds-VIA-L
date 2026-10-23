@@ -1,17 +1,16 @@
-VIA-L 0.2.3 ist ein Wartungsrelease für Apple Silicon und Intel.
+VIA-L 0.2.4 ergänzt Venom und Wootility neben VIA und Vial.
 
-- Die eingebettete Electron-Laufzeit wurde von 44.5.1 auf 44.7.0 aktualisiert. Sie bringt Fehlerkorrekturen und aktualisierte Chromium-Komponenten mit; die Bedienung von VIA-L bleibt unverändert.
-- Build- und Testwerkzeuge wurden aktualisiert. Wöchentliche Abhängigkeitsüberwachung und zusätzliche Sicherheitsprüfungen unterstützen die weitere Wartung.
+- Alle vier Tastatur-Tools sind direkt über die App-Leiste erreichbar. Bei kleinen Fenstern benötigt die Leiste weniger Platz.
+- Jedes Tool hat eigene Websitedaten, Zoom-Einstellungen und einen separaten Reset. Vorhandene Einstellungen bleiben erhalten.
+- Wootility verwendet den WebHID-Verbindungsablauf der Webseite. Blockierte eingebettete Fremdseiten unterbrechen die Einrichtung nicht mehr mit einem externen Linkdialog; externe Hauptnavigationen benötigen weiterhin eine Bestätigung.
 
 **Downloads:**
 
-- **Apple Silicon:** `VIA-L-0.2.3-macOS-arm64.zip` für Macs mit Apple-Chip.
-- **Intel:** `VIA-L-0.2.3-macOS-x64.zip` für Intel-Macs (x86_64).
+- **Apple Silicon:** `VIA-L-0.2.4-macOS-arm64.zip` für Macs mit Apple-Chip.
+- **Intel:** `VIA-L-0.2.4-macOS-x64.zip` für Intel-Macs (x86_64).
 
 Beide Varianten benötigen **macOS 13 oder neuer** und eine Internetverbindung. Sie sind mit Developer ID signiert und von Apple notarisiert; das Ticket ist an der jeweiligen App angeheftet. Zu jedem ZIP gehört eine SHA-256-Prüfsumme.
 
 Zum Aktualisieren VIA-L regulär beenden, das zum Mac passende ZIP entpacken und **VIA-L.app** im Programme-Ordner ersetzen. Websitedaten und Einstellungen bleiben erhalten. Nach dem Neustart die Tastatur erneut autorisieren.
 
-Build, automatisierte Funktionsprüfungen und die fertigen Pakete werden geprüft: Signatur, Notarisierung, Gatekeeper sowie sämtliche gebündelten Mach-O-Architekturen. Eine erneute vollständige WebHID-Hardwareabnahme auf einem physischen Intel-Mac ist nicht Teil dieser automatisierten Prüfung.
-
-Details zur Laufzeit: [Electron 44.7.0 Release Notes](https://github.com/electron/electron/releases/tag/v44.7.0).
+Geprüft: 19 automatisierte Tests, 23 App-Prüfungen, Fokus-/Reset-Verhalten und drei Fenstergrößen. Wooting 60HE+ und VENOM65HE wurden in der Geräteauswahl erkannt; die Auswahl wurde ohne Verbindung abgebrochen. Tatsächliches Lesen/Schreiben der Tastaturen und ein Start auf einem sauberen Zweit-Mac sind nicht Teil dieser Prüfung.

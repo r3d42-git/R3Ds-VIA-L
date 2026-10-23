@@ -85,7 +85,7 @@ async function generation() {
     assert.equal(await ui.locator('#settings').isVisible(), false);
     assert.equal(await generation(), initialGeneration);
     assert.equal(await remote.evaluate(() => localStorage.getItem('kwt-focus')), 'kept');
-    assert.deepEqual(await ui.locator('.toolbar :is(button, select)').evaluateAll(elements => elements.map(element => element.tabIndex)), [-1, -1, -1, -1, -1]);
+    assert.deepEqual(await ui.locator('.toolbar :is(button, select)').evaluateAll(elements => elements.map(element => element.tabIndex)), [-1, -1, -1, -1, -1, -1, -1]);
     await ui.locator('#settings-button').evaluate(button => button.focus());
     await ui.keyboard.press('Enter');
     await ui.keyboard.press('Space');

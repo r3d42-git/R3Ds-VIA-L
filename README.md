@@ -4,11 +4,13 @@
 
 [English](README.en.md)
 
-**R3Ds VIA-L**, kurz **VIA-L**, bringt [VIA](https://usevia.app/) und [Vial](https://vial.rocks/) in eine eigenständige macOS-App. Verbinde deine kompatible Tastatur, passe Tastenbelegungen an und verwalte deine Layouts über die vertraute Oberfläche des jeweiligen Tools. Zwischen VIA und Vial wechselst du direkt in der App.
+**R3Ds VIA-L**, kurz **VIA-L**, bringt [VIA](https://usevia.app/), [Vial](https://vial.rocks/), [Venom](https://venom.how/) und [Wootility](https://wootility.io/) in eine eigenständige macOS-App. Verbinde deine kompatible Tastatur, passe Tastenbelegungen an und verwalte deine Layouts über die vertraute Oberfläche des jeweiligen Tools. Zwischen VIA, Vial, Venom und Wootility wechselst du direkt in der App.
 
-VIA-L lädt die **Online-Versionen** beider Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört weder zu VIA noch zu Vial.
+VIA-L lädt die **Online-Versionen** der vier Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört zu keinem der vier Originalprojekte.
 
-**Downloads für Version 0.2.3:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
+Neu in Version 0.2.4: Venom und Wootility, eine kompaktere Leiste für kleine Fenster und eine Korrektur, damit eingebettete Fremdseiten den Verbindungsablauf nicht unterbrechen.
+
+**Downloads für Version 0.2.4:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
 
 Wähle unter ** → Über diesen Mac**: Bei „Chip: Apple …“ passt Apple Silicon, bei „Prozessor: Intel …“ passt Intel. Beide ZIPs enthalten dieselbe App für den jeweiligen Prozessor.
 
@@ -16,9 +18,9 @@ Das ZIP entpacken und **VIA-L.app** in den Programme-Ordner verschieben. Neue Ve
 
 ## Verwendung
 
-1. VIA oder Vial in der oberen Leiste wählen. Beim Wechsel wird die bisherige Webansicht geschlossen; ungesicherte Änderungen auf der Webseite können verloren gehen.
-2. Auf der Originalseite eine Verbindung anfordern: bei VIA über **„Gerät autorisieren +“**, bei Vial über **„Start Vial“**. In VIA-L das angebotene Gerät markieren und **„Verbinden“** wählen. Die Auswahl gibt kein Gerät ohne Bestätigung frei.
-3. Tastenbelegungen und Layouts direkt in VIA oder Vial anpassen.
+1. VIA, Vial, Venom oder Wootility in der oberen Leiste wählen. Beim Wechsel wird die bisherige Webansicht geschlossen; ungesicherte Änderungen auf der Webseite können verloren gehen.
+2. Auf der Originalseite eine Verbindung anfordern: bei VIA über **„Gerät autorisieren +“**, bei Vial über **„Start Vial“**, bei Venom über **„Connect“**, bei Wootility über **„Initialisiere ein Gerät“ → „Erlaube dem Browser“**. In VIA-L das angebotene Gerät markieren und **„Verbinden“** wählen. Die Auswahl gibt kein Gerät ohne Bestätigung frei.
+3. Tastenbelegungen und Layouts direkt im gewählten Tool anpassen.
 4. Import und Export über die Funktionen des jeweiligen Tools nutzen. Für eine VIA-JSON-Datei steht die Sideload-Funktion von VIA zur Verfügung.
 
 Die App-Leiste ist während eines Tastentests bewusst aus der Tab-Reihenfolge genommen und per Maus bedienbar. Einstellungen und Geräteauswahl bleiben per Tastatur bedienbar. Beim Löschen von Websitedaten muss der Name des betroffenen Tools exakt eingegeben werden. Der Reset betrifft nur dieses Tool.
@@ -42,7 +44,7 @@ npm run package:mac -- --arch=x64 # lokales Intel-App-Bundle
 npm run package:mac -- --arch=arm64 # lokales Apple-Silicon-App-Bundle
 ```
 
-`npm start` baut den TypeScript-Code und startet Electron. Der erste Bezug von Electron und die beiden Webseiten erfordern Internetzugriff. Tests mit Testprofilen verwenden eine eigene Datenablage und greifen nicht auf das reguläre Benutzerprofil zu.
+`npm start` baut den TypeScript-Code und startet Electron. Der erste Bezug von Electron und die vier Webseiten erfordern Internetzugriff. Tests mit Testprofilen verwenden eine eigene Datenablage und greifen nicht auf das reguläre Benutzerprofil zu.
 
 VIA-L startet auf dem Bildschirm unter dem Mauszeiger mit **1676 × 1124** macOS-Punkten, sofern die nutzbare Arbeitsfläche diese Größe zulässt. Andernfalls wird das Fenster unter Berücksichtigung von Menüleiste und Dock passend begrenzt und zentriert. Bei jedem Start wird die Zielgröße neu bestimmt; manuell gespeicherte Fenstergrenzen werden ignoriert. Einstellungen, Zoom und Websitedaten bleiben erhalten.
 

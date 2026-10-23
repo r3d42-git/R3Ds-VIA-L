@@ -23,7 +23,7 @@ interface PublicState {
 
 const DEFAULTS: Preferences = {
   tool: 'via',
-  zoom: { via: 1, vial: 1 }, generation: { via: 0, vial: 0 },
+  zoom: { via: 1, vial: 1, venom: 1, wootility: 1 }, generation: { via: 0, vial: 0, venom: 0, wootility: 0 },
 };
 const TOOLBAR_HEIGHT = 70;
 const chooser = new HidChooser();
@@ -60,10 +60,10 @@ function readPreferences(): Preferences {
     return {
       tool: isTool(data.tool) ? data.tool : DEFAULTS.tool,
       zoom: {
-        via: validZoom(data.zoom?.via), vial: validZoom(data.zoom?.vial),
+        via: validZoom(data.zoom?.via), vial: validZoom(data.zoom?.vial), venom: validZoom(data.zoom?.venom), wootility: validZoom(data.zoom?.wootility),
       },
       generation: {
-        via: validGeneration(data.generation?.via), vial: validGeneration(data.generation?.vial),
+        via: validGeneration(data.generation?.via), vial: validGeneration(data.generation?.vial), venom: validGeneration(data.generation?.venom), wootility: validGeneration(data.generation?.wootility),
       },
     };
   } catch {
@@ -214,10 +214,11 @@ function askExternal(url: string): void {
 
 function guardRemote(contents: WebContents, tool: Tool): void {
   let loadFailed = false;
-  const guardNavigation = (event: { preventDefault(): void }, url: string) => {
+  const guardNavigation = (event: { preventDefault(): void; isMainFrame: boolean }, url: string) => {
     if (isAllowedDocument(tool, url)) return;
     event.preventDefault();
-    if (contents === currentContents()) askExternal(url);
+    // Embedded third-party documents stay blocked without interrupting the tool.
+    if (event.isMainFrame && contents === currentContents()) askExternal(url);
   };
   contents.on('will-frame-navigate', event => guardNavigation(event, event.url));
   contents.on('will-redirect', event => guardNavigation(event, event.url));
@@ -268,7 +269,8 @@ async function showTool(tool: Tool): Promise<void> {
   remoteView = view;
   const contents = view.webContents;
   guardRemote(contents, tool);
-  if (tool === 'via') {
+  if (tool === 'via' || tool === 'wootility') {
+    // These sites otherwise select their desktop flow instead of browser WebHID.
     const browserUserAgent = ses.getUserAgent().replace(/\s(?:Electron|KeyboardWebTools|VIA-L)\/[^\s]+/g, '');
     contents.setUserAgent(browserUserAgent);
   }
@@ -428,7 +430,7 @@ app.whenReady().then(() => {
     applicationName: 'R3Ds VIA-L',
     applicationVersion: app.getVersion(),
     copyright: 'Copyright © 2026 r3d42-git',
-    credits: 'Unabhängige App für VIA und Vial. GPL-3.0-or-later. Keine Verbindung zu den Originalprojekten.',
+    credits: 'Unabhängige App für VIA, Vial, Venom und Wootility. GPL-3.0-or-later. Keine Verbindung zu den Originalprojekten.',
     iconPath: join(__dirname, 'AppIcon.png'),
   });
   installIpc();

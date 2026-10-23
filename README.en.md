@@ -4,11 +4,13 @@
 
 [Deutsch](README.md)
 
-**R3Ds VIA-L**, or **VIA-L** for short, brings [VIA](https://usevia.app/) and [Vial](https://vial.rocks/) into a standalone macOS app. Connect your compatible keyboard, remap keys, and manage layouts through each tool's familiar interface. Switch between VIA and Vial directly in the app.
+**R3Ds VIA-L**, or **VIA-L** for short, brings [VIA](https://usevia.app/), [Vial](https://vial.rocks/), [Venom](https://venom.how/), and [Wootility](https://wootility.io/) into a standalone macOS app. Connect your compatible keyboard, remap keys, and manage layouts through each tool's familiar interface. Switch between VIA, Vial, Venom, and Wootility directly in the app.
 
-VIA-L loads the **online versions** of both tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with VIA or Vial.
+VIA-L loads the **online versions** of all four tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with any of the four original projects.
 
-**Downloads for version 0.2.3:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.3/VIA-L-0.2.3-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
+New in version 0.2.4: Venom and Wootility, a compact toolbar for small windows, and a fix that prevents embedded third-party pages from interrupting device setup.
+
+**Downloads for version 0.2.4:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
 
 Check ** → About This Mac**: choose Apple Silicon for an Apple chip, or Intel for an Intel processor. Both ZIPs contain the same app built for the respective processor.
 
@@ -16,9 +18,9 @@ Extract the ZIP and move **VIA-L.app** to your Applications folder. Updates are 
 
 ## Use
 
-1. Choose VIA or Vial in the top bar. Switching closes the previous website view; unsaved changes on that site may be lost.
-2. Request a connection on the original site: **“Authorize device +”** in VIA or **“Start Vial”** in Vial. Select the offered device in VIA-L, then choose **Connect**. No device is granted without this selection.
-3. Remap keys and adjust layouts directly in VIA or Vial.
+1. Choose VIA, Vial, Venom, or Wootility in the top bar. Switching closes the previous website view; unsaved changes on that site may be lost.
+2. Request a connection on the original site: **“Authorize device +”** in VIA, **“Start Vial”** in Vial, **“Connect”** in Venom, or the device initialization and browser permission steps in Wootility. Select the offered device in VIA-L, then choose **Connect**. No device is granted without this selection.
+3. Remap keys and adjust layouts directly in the selected tool.
 4. Use each tool's import and export functions. To load a VIA JSON file, use VIA's sideload feature.
 
 The app toolbar is intentionally outside the tab sequence while testing keys and is operated with a pointer. Settings and the device chooser remain keyboard accessible. Resetting website data requires entering the exact tool name; it affects only that tool.

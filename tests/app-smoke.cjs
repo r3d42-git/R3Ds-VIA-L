@@ -7,6 +7,10 @@ const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'output/playwright');
 fs.mkdirSync(output, {recursive:true});
 const data = fs.mkdtempSync(path.join(output, 'profile-'));
+// Existing two-tool profiles must retain their settings and receive defaults for the added tools.
+fs.writeFileSync(path.join(data, 'preferences.json'), JSON.stringify({
+  tool: 'via', zoom: { via: 0.95, vial: 1.1 }, generation: { via: 2, vial: 3 },
+}));
 const env = {...process.env, KEYBOARD_WEB_TOOLS_DATA_DIR:data};
 delete env.ELECTRON_RUN_AS_NODE;
 const checks = [];
@@ -16,12 +20,12 @@ async function check(name, run) {
 }
 async function remoteInfo() {
   return app.evaluate(({webContents}) => webContents.getAllWebContents()
-    .filter(w => /^https:\/\/(usevia\.app|vial\.rocks)(\/|$)/.test(w.getURL()))
+    .filter(w => /^https:\/\/(usevia\.app|vial\.rocks|venom\.how|wootility\.io)(\/|$)/.test(w.getURL()))
     .map(w => ({id:w.id, url:w.getURL(), prefs:w.getLastWebPreferences()})));
 }
 async function remoteJS(js, gesture=false) {
   return app.evaluate(({webContents}, {js, gesture}) => {
-    const w = webContents.getAllWebContents().find(w => /^https:\/\/(usevia\.app|vial\.rocks)(\/|$)/.test(w.getURL()));
+    const w = webContents.getAllWebContents().find(w => /^https:\/\/(usevia\.app|vial\.rocks|venom\.how|wootility\.io)(\/|$)/.test(w.getURL()));
     if (!w) throw new Error('No remote tool');
     return w.executeJavaScript(js, gesture);
   }, {js, gesture});
@@ -34,6 +38,12 @@ async function remoteJS(js, gesture=false) {
     await ui.waitForLoadState('domcontentloaded');
     await expect.poll(async () => (await remoteInfo()).length, {timeout:60000}).toBe(1);
     await expect.poll(() => remoteJS('document.readyState'), {timeout:60000}).toBe('complete');
+    await check('legacy two-tool preferences are preserved with Venom and Wootility defaults', async () => {
+      const saved = JSON.parse(fs.readFileSync(path.join(data, 'preferences.json'), 'utf8'));
+      assert.deepEqual(saved.zoom, { via: 0.95, vial: 1.1, venom: 1, wootility: 1 });
+      assert.deepEqual(saved.generation, { via: 2, vial: 3, venom: 0, wootility: 0 });
+      await expect(ui.getByRole('combobox', {name:'Zoom'})).toHaveValue('0.95');
+    });
     await check('VIA live loaded; sandbox, isolation, no Node or remote preload', async () => {
       const [r] = await remoteInfo();
       assert.ok(r.url.startsWith('https://usevia.app/'));
@@ -94,6 +104,24 @@ async function remoteJS(js, gesture=false) {
       await ui.getByRole('button',{name:'Nicht öffnen',exact:true}).click();
       await app.context().unroute('https://usevia.app/__kwt_redirect');
     });
+    await check('external iframe navigation and redirects stay blocked without a dialog', async () => {
+      await app.context().route('https://usevia.app/__kwt_frame_redirect', route => route.fulfill({status:302, headers:{location:'https://example.com/frame-redirect'}}));
+      await app.evaluate(({webContents}) => {
+        const w = webContents.getAllWebContents().find(w => w.getURL().startsWith('https://usevia.app/'));
+        global.__kwtBlockedFrames = [];
+        for (const name of ['will-frame-navigate', 'will-redirect']) {
+          w.on(name, event => {
+            if (!event.isMainFrame && event.url.startsWith('https://example.com/frame-')) global.__kwtBlockedFrames.push(event.url);
+          });
+        }
+      });
+      await remoteJS("for (const url of ['https://example.com/frame-direct', 'https://usevia.app/__kwt_frame_redirect']) { const frame=document.createElement('iframe'); frame.className='kwt-frame-test'; frame.src=url; document.body.append(frame); } true");
+      await expect.poll(() => app.evaluate(() => [...new Set(global.__kwtBlockedFrames)].sort())).toEqual(['https://example.com/frame-direct', 'https://example.com/frame-redirect']);
+      assert.equal((await ui.evaluate(() => window.keyboardTools.state())).external, null);
+      assert.equal(await app.evaluate(({webContents}) => webContents.getAllWebContents().find(w => w.getURL().startsWith('https://usevia.app/')).mainFrame.framesInSubtree.some(frame => frame.url.startsWith('https://example.com/frame-'))), false);
+      await remoteJS("document.querySelectorAll('.kwt-frame-test').forEach(frame => frame.remove()); true");
+      await app.context().unroute('https://usevia.app/__kwt_frame_redirect');
+    });
     const old = (await remoteInfo())[0].id;
     await check('switch destroys previous WebContents and loads live Vial', async () => {
       await ui.getByRole('button',{name:'Vial',exact:true}).click();
@@ -125,6 +153,72 @@ async function remoteJS(js, gesture=false) {
       await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://usevia.app/');
       assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), null);
     });
+    for (const {id, label, url, zoom} of [
+      {id:'venom', label:'Venom', url:'https://venom.how/', zoom:'1.2'},
+      {id:'wootility', label:'Wootility', url:'https://wootility.io/', zoom:'1.15'},
+    ]) {
+      await check(`${label} loads in an isolated sandbox and cancels its connection picker`, async () => {
+        await remoteJS("localStorage.setItem('kwt-smoke','via'); true");
+        const previous = (await remoteInfo())[0].id;
+        await ui.getByRole('button',{name:label,exact:true}).click();
+        await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe(url);
+        await expect.poll(() => remoteJS('document.readyState'), {timeout:60000}).toBe('complete');
+        assert.equal(await app.evaluate(({webContents}, id) => !!webContents.fromId(id), previous), false);
+        const [remote] = await remoteInfo();
+        assert.equal(remote.prefs.sandbox, true);
+        assert.equal(remote.prefs.contextIsolation, true);
+        assert.equal(remote.prefs.nodeIntegration, false);
+        assert.ok(!remote.prefs.preload);
+        assert.deepEqual(await remoteJS('[typeof require, typeof process, typeof window.keyboardTools]'), ['undefined','undefined','undefined']);
+        assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), null);
+        await expect(ui.getByRole('combobox',{name:'Zoom'})).toHaveValue('1');
+        const page = app.context().pages().find(p => p.url().startsWith(url));
+        fs.writeFileSync(path.join(output,`${id}-body.txt`), await page.locator('body').innerText());
+        if (id === 'wootility') {
+          assert.doesNotMatch(await page.evaluate(() => navigator.userAgent), /Electron\//);
+          await page.getByRole('button',{name:'Initialisiere ein Gerät',exact:true}).click();
+          await page.getByRole('button',{name:'Erlaube dem Browser',exact:true}).click();
+        } else {
+          await page.getByRole('button',{name:/^Connect(?: Device)?$/}).click();
+        }
+        await expect(ui.getByRole('button',{name:'Abbrechen',exact:true})).toBeVisible({timeout:15000});
+        await expect(ui.locator('#overlay-text')).toContainText(url);
+        await ui.screenshot({path:path.join(output,`${id}-hid-chooser.png`)});
+        await ui.getByRole('button',{name:'Abbrechen',exact:true}).click();
+        await expect(ui.getByRole('button',{name:'Abbrechen',exact:true})).not.toBeVisible();
+        assert.equal(await remoteJS('navigator.hid.getDevices().then(d => d.length)'), 0);
+      });
+      await check(`${label} zoom and reset are independent of the other tools`, async () => {
+        await ui.getByRole('combobox',{name:'Zoom'}).selectOption(zoom);
+        assert.equal(await app.evaluate(({webContents}, url) => webContents.getAllWebContents().find(w => w.getURL().startsWith(url)).getZoomFactor(), url), Number(zoom));
+        await remoteJS("localStorage.setItem('kwt-reset','tool-only'); true");
+        await app.evaluate(({webContents}, url) => {
+          global.__kwtResetSession = webContents.getAllWebContents().find(w => w.getURL().startsWith(url)).session;
+        }, url);
+        await ui.getByRole('button',{name:'Einstellungen',exact:true}).click();
+        await ui.getByRole('button',{name:`${label}-Daten und Gerätefreigaben löschen`,exact:true}).click();
+        await ui.getByRole('textbox',{name:/Zum Löschen/}).fill('Vial');
+        await expect(ui.getByRole('button',{name:'Jetzt löschen',exact:true})).toBeDisabled();
+        await ui.getByRole('textbox',{name:/Zum Löschen/}).fill(label);
+        await ui.getByRole('button',{name:'Jetzt löschen',exact:true}).click();
+        await expect.poll(() => app.evaluate(({webContents}, url) => {
+          const current = webContents.getAllWebContents().find(w => w.getURL().startsWith(url));
+          return !!current && current.session !== global.__kwtResetSession;
+        }, url), {timeout:30000}).toBe(true);
+        await expect.poll(() => remoteJS('document.readyState'), {timeout:60000}).toBe('complete');
+        assert.equal(await remoteJS("localStorage.getItem('kwt-reset')"), null);
+        await expect(ui.getByRole('combobox',{name:'Zoom'})).toHaveValue(zoom);
+        await remoteJS(`localStorage.setItem('kwt-smoke','${id}'); true`);
+        await ui.getByRole('button',{name:'Vial',exact:true}).click();
+        await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://vial.rocks/');
+        assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), 'vial');
+        await expect(ui.getByRole('combobox',{name:'Zoom'})).toHaveValue('1.1');
+        await ui.getByRole('button',{name:'VIA',exact:true}).click();
+        await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://usevia.app/');
+        assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), 'via');
+        await expect(ui.getByRole('combobox',{name:'Zoom'})).toHaveValue('0.95');
+      });
+    }
     await check('file input accepts user-selected JSON without filesystem bridge', async () => {
       const fixture = path.join(output, 'import-fixture.json');
       fs.writeFileSync(fixture, '{"keyboard-web-tools":"browser-file-input-smoke"}\n');
@@ -188,16 +282,29 @@ async function remoteJS(js, gesture=false) {
       await expect.poll(() => app.evaluate(({BrowserWindow}) => BrowserWindow.getAllWindows()[0].getSize())).toEqual([980,720]);
       await ui.screenshot({path:path.join(output,'compact-toolbar.png')});
     });
+    await ui.getByRole('button',{name:'Venom',exact:true}).click();
+    await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://venom.how/');
+    assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), 'venom');
+    await ui.getByRole('button',{name:'Wootility',exact:true}).click();
+    await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://wootility.io/');
+    assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), 'wootility');
     await app.close(); app = null;
     const preferences = JSON.parse(fs.readFileSync(path.join(data,'preferences.json'),'utf8'));
-    assert.equal(preferences.tool,'via');
+    assert.equal(preferences.tool,'wootility');
+    assert.deepEqual(preferences.zoom, {via:0.95, vial:1.1, venom:1.2, wootility:1.15});
+    assert.deepEqual(preferences.generation, {via:3, vial:3, venom:1, wootility:1});
     checks.push('preferences saved on disk');
     // A profile from an older version may still contain window bounds.
     preferences.bounds = {width:980, height:720};
     fs.writeFileSync(path.join(data,'preferences.json'), JSON.stringify(preferences));
     app = await electron.launch({args:[root], cwd:root, env, timeout:30000});
     const restored = await app.firstWindow();
-    await expect(restored.getByRole('button',{name:'VIA',exact:true})).toHaveAttribute('aria-pressed','true');
+    await expect(restored.getByRole('button',{name:'Wootility',exact:true})).toHaveAttribute('aria-pressed','true');
+    await expect(restored.getByRole('combobox',{name:'Zoom'})).toHaveValue('1.15');
+    await expect.poll(async () => (await remoteInfo())[0]?.url, {timeout:60000}).toBe('https://wootility.io/');
+    await expect.poll(() => remoteJS('document.readyState'), {timeout:60000}).toBe('complete');
+    assert.equal(await remoteJS("localStorage.getItem('kwt-smoke')"), 'wootility');
+    assert.equal(await remoteJS('navigator.hid.getDevices().then(d => d.length)'), 0);
     const geometry = await app.evaluate(({BrowserWindow, screen}) => {
       const bounds = BrowserWindow.getAllWindows()[0].getBounds();
       return { bounds, workArea: screen.getDisplayMatching(bounds).workArea };

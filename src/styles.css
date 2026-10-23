@@ -39,3 +39,8 @@ select { padding: 0 7px; }
 [hidden] { display: none !important; }
 @media (max-width: 1100px) { .brand span { display: none; } }
 .toolbar button, .toolbar nav, .toolbar select, .toolbar .zoom-label { flex-shrink: 0; }
+
+@media (max-width: 800px) {
+  .toolbar { gap: 8px; padding-inline: 12px; }
+  .tool { padding-inline: 10px; }
+}

@@ -1,4 +1,11 @@
-type Tool = 'via' | 'vial';
+type Tool = 'via' | 'vial' | 'venom' | 'wootility';
+
+const tools: Record<Tool, { label: string; url: string }> = {
+  via: { label: 'VIA', url: 'https://usevia.app/' },
+  vial: { label: 'Vial', url: 'https://vial.rocks/' },
+  venom: { label: 'Venom', url: 'https://venom.how/' },
+  wootility: { label: 'Wootility', url: 'https://wootility.io/' },
+};
 export {};
 interface ChoiceSnapshot {
   token: number;
@@ -29,8 +36,7 @@ interface AppApi {
 
 const api = (window as unknown as { keyboardTools: AppApi }).keyboardTools;
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
-const via = $<HTMLButtonElement>('via');
-const vial = $<HTMLButtonElement>('vial');
+const toolButtons = (Object.keys(tools) as Tool[]).map(tool => ({ tool, button: $<HTMLButtonElement>(tool) }));
 const status = $('status');
 const zoom = $<HTMLSelectElement>('zoom');
 const overlay = $('overlay');
@@ -62,14 +68,14 @@ function render(state: AppState): void {
   const oldTool = latest?.tool;
   latest = state;
   if (state.picker || state.external || (oldTool && oldTool !== state.tool)) closeSettingsLocally();
-  via.classList.toggle('selected', state.tool === 'via');
-  vial.classList.toggle('selected', state.tool === 'vial');
-  via.setAttribute('aria-pressed', String(state.tool === 'via'));
-  vial.setAttribute('aria-pressed', String(state.tool === 'vial'));
+  for (const { tool, button } of toolButtons) {
+    button.classList.toggle('selected', state.tool === tool);
+    button.setAttribute('aria-pressed', String(state.tool === tool));
+  }
   status.textContent = state.status;
   status.classList.toggle('busy', state.loading);
   zoom.value = String(state.zoom);
-  reset.textContent = `${state.tool === 'via' ? 'VIA' : 'Vial'}-Daten und Gerätefreigaben löschen`;
+  reset.textContent = `${tools[state.tool].label}-Daten und Gerätefreigaben löschen`;
   const picker = state.picker;
   const external = state.external;
   settingsButton.disabled = !!picker || !!external;
@@ -82,7 +88,7 @@ function render(state: AppState): void {
   grant.disabled = !selectedDevice;
   if (picker) {
     overlayTitle.textContent = 'HID-Gerät auswählen';
-    overlayText.textContent = `Die Webseite „${state.tool === 'via' ? 'https://usevia.app/' : 'https://vial.rocks/'}“ möchte auf HID-Geräte zugreifen. Wähle ein Gerät und klicke auf „Verbinden“.`;
+    overlayText.textContent = `Die Webseite „${tools[state.tool].url}“ möchte auf HID-Geräte zugreifen. Wähle ein Gerät und klicke auf „Verbinden“.`;
     cancel.textContent = 'Abbrechen';
     open.hidden = true;
     if (!picker.devices.length) {
@@ -135,8 +141,9 @@ function toolbarClick(button: HTMLElement, handler: () => void): void {
   });
 }
 
-toolbarClick(via, () => { closeSettingsLocally(); void api.selectTool('via'); });
-toolbarClick(vial, () => { closeSettingsLocally(); void api.selectTool('vial'); });
+for (const { tool, button } of toolButtons) {
+  toolbarClick(button, () => { closeSettingsLocally(); void api.selectTool(tool); });
+}
 toolbarClick($('reload'), () => void api.reload());
 zoom.addEventListener('change', () => void api.setZoom(Number(zoom.value)));
 toolbarClick(settingsButton, () => {
@@ -148,13 +155,13 @@ toolbarClick(settingsButton, () => {
 reset.addEventListener('click', () => {
   if (!latest) return;
   resetConfirmation.hidden = false;
-  resetLabel.textContent = `Zum Löschen „${latest.tool === 'via' ? 'VIA' : 'Vial'}“ eingeben:`;
+  resetLabel.textContent = `Zum Löschen „${tools[latest.tool].label}“ eingeben:`;
   resetPhrase.value = '';
   resetConfirm.disabled = true;
   resetPhrase.focus();
 });
 resetPhrase.addEventListener('input', () => {
-  resetConfirm.disabled = resetPhrase.value !== (latest?.tool === 'via' ? 'VIA' : 'Vial');
+  resetConfirm.disabled = resetPhrase.value !== (latest ? tools[latest.tool].label : '');
 });
 resetCancel.addEventListener('click', () => {
   resetConfirmation.hidden = true;
