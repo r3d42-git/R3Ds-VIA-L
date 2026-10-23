@@ -10,6 +10,8 @@ VIA-L lädt die **Online-Versionen** der vier Tools und ergänzt eine lokale Ger
 
 Neu in Version 0.2.4: Venom und Wootility, eine kompaktere Leiste für kleine Fenster und eine Korrektur, damit eingebettete Fremdseiten den Verbindungsablauf nicht unterbrechen.
 
+Erfolgreich in der Praxis getestet mit **VENOM65HE über Venom** und **Wooting 60HE+ über Wootility**.
+
 **Downloads für Version 0.2.4:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
 
 Wähle unter ** → Über diesen Mac**: Bei „Chip: Apple …“ passt Apple Silicon, bei „Prozessor: Intel …“ passt Intel. Beide ZIPs enthalten dieselbe App für den jeweiligen Prozessor.

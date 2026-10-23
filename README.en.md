@@ -10,6 +10,8 @@ VIA-L loads the **online versions** of all four tools and adds a local WebHID de
 
 New in version 0.2.4: Venom and Wootility, a compact toolbar for small windows, and a fix that prevents embedded third-party pages from interrupting device setup.
 
+Successfully tested with real keyboards: **VENOM65HE using Venom** and **Wooting 60HE+ using Wootility**.
+
 **Downloads for version 0.2.4:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.4/VIA-L-0.2.4-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
 
 Check ** → About This Mac**: choose Apple Silicon for an Apple chip, or Intel for an Intel processor. Both ZIPs contain the same app built for the respective processor.

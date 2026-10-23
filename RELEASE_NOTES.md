@@ -13,4 +13,4 @@ Beide Varianten benötigen **macOS 13 oder neuer** und eine Internetverbindung. 
 
 Zum Aktualisieren VIA-L regulär beenden, das zum Mac passende ZIP entpacken und **VIA-L.app** im Programme-Ordner ersetzen. Websitedaten und Einstellungen bleiben erhalten. Nach dem Neustart die Tastatur erneut autorisieren.
 
-Geprüft: 19 automatisierte Tests, 23 App-Prüfungen, Fokus-/Reset-Verhalten und drei Fenstergrößen. Wooting 60HE+ und VENOM65HE wurden in der Geräteauswahl erkannt; die Auswahl wurde ohne Verbindung abgebrochen. Tatsächliches Lesen/Schreiben der Tastaturen und ein Start auf einem sauberen Zweit-Mac sind nicht Teil dieser Prüfung.
+Erfolgreich geprüft: Praxistests mit VENOM65HE über Venom und Wooting 60HE+ über Wootility. Zusätzlich bestanden: 19 automatisierte Tests, 23 App-Prüfungen, Fokus-/Reset-Verhalten und drei Fenstergrößen.
