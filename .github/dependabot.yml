@@ -3,14 +3,16 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-      day: monday
-      time: "06:00"
+      # Use cron because Dependabot's daily interval skips weekends.
+      interval: cron
+      cronjob: "0 6 * * *"
       timezone: Europe/Berlin
     open-pull-requests-limit: 3
     groups:
       npm-minor-patch:
         patterns: ["*"]
+        # Runtime updates must remain separate for focused compatibility review.
+        exclude-patterns: ["electron"]
         update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
