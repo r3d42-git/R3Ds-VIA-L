@@ -3,6 +3,7 @@ import { readFileSync, mkdirSync, cpSync, mkdtempSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { architectureOption, validateArchitecture } from './release-architectures.mjs';
+import { prepareElectronNotices } from './electron-notices.mjs';
 
 const arch = architectureOption(process.argv.slice(2)) || validateArchitecture(process.arch);
 if (process.platform !== 'darwin') throw new Error('macOS-Paketierung bitte auf macOS ausführen.');
@@ -11,6 +12,7 @@ const outArg = process.argv.slice(2).find(value => value.startsWith('--out='));
 const out = resolve(outArg ? outArg.slice(6) : 'release');
 const signed = process.argv.includes('--signed');
 if (signed && !process.env.SIGNING_IDENTITY) throw new Error('SIGNING_IDENTITY is required.');
+const electronNotices = prepareElectronNotices(pkg.devDependencies.electron);
 // Explicit input allowlist: no private notes, profiles, credentials or test data.
 const staging = mkdtempSync(join(tmpdir(), 'via-l-package-'));
 try {
@@ -26,7 +28,7 @@ try {
     appCategoryType: 'public.app-category.utilities',
     appCopyright: 'Copyright © 2026 r3d42-git',
     icon: resolve('assets/AppIcon.icns'),
-    extraResource: [resolve('node_modules/electron/dist/LICENSE'), resolve('node_modules/electron/dist/LICENSES.chromium.html')],
+    extraResource: electronNotices,
     asar: true, overwrite: true, prune: true,
     osxSign: signed ? {
       identity: process.env.SIGNING_IDENTITY,

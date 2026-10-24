@@ -8,11 +8,11 @@
 
 VIA-L lädt die **Online-Versionen** der vier Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört zu keinem der vier Originalprojekte.
 
-Neu in Version 0.2.6: Behebt das Speichern und Laden von Vial-Layouts im `.vil`-Format.
+Version 0.2.7 ist ein Wartungsrelease mit Electron 45.0.0 und Chromium 156. Die Anwendungslogik wurde nicht geändert.
 
-Der Vial-Layout-Fix wurde am korrigierten lokalen Build getestet und für gut befunden.
+Der Nutzer hat den Electron-45-Testbuild mit **VIA, Vial, Venom und Wootility** erfolgreich geprüft. Bei Wootility sind in seiner Umgebung derzeit zwei Verbindungsversuche nötig; der Hinweis wird separat untersucht.
 
-**Downloads für Version 0.2.6:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
+**Downloads für Version 0.2.7:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.7/VIA-L-0.2.7-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.7/VIA-L-0.2.7-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
 
 Wähle unter ** → Über diesen Mac**: Bei „Chip: Apple …“ passt Apple Silicon, bei „Prozessor: Intel …“ passt Intel. Beide ZIPs enthalten dieselbe App für den jeweiligen Prozessor.
 
