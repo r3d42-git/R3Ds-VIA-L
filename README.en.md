@@ -8,11 +8,11 @@
 
 VIA-L loads the **online versions** of all four tools and adds a local WebHID device chooser. An internet connection is required. VIA-L is an independent project and is not affiliated with any of the four original projects.
 
-New in version 0.2.5: maintenance and security update with Electron 44.9.1. VIA, Vial, Venom, and Wootility retain their existing functionality.
+New in version 0.2.6: fixes saving and loading Vial layouts in `.vil` format.
 
-Version 0.2.5 was successfully tested in practice with **VIA, Vial, Venom, and Wootility**.
+The Vial layout fix was tested and approved in the corrected local build.
 
-**Downloads for version 0.2.5:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.5/VIA-L-0.2.5-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.5/VIA-L-0.2.5-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
+**Downloads for version 0.2.6:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-x64.zip) · macOS 13 or later · signed and notarized by Apple.
 
 Check ** → About This Mac**: choose Apple Silicon for an Apple chip, or Intel for an Intel processor. Both ZIPs contain the same app built for the respective processor.
 
@@ -23,7 +23,7 @@ Extract the ZIP and move **VIA-L.app** to your Applications folder. Updates are 
 1. Choose VIA, Vial, Venom, or Wootility in the top bar. Switching closes the previous website view; unsaved changes on that site may be lost.
 2. Request a connection on the original site: **“Authorize device +”** in VIA, **“Start Vial”** in Vial, **“Connect”** in Venom, or the device initialization and browser permission steps in Wootility. Select the offered device in VIA-L, then choose **Connect**. No device is granted without this selection.
 3. Remap keys and adjust layouts directly in the selected tool.
-4. Use each tool's import and export functions. To load a VIA JSON file, use VIA's sideload feature.
+4. Use each tool's import and export functions. Vial saves `.vil` layouts using **File → Save current layout…** and loads them using **File → Load saved layout…**. To load a VIA JSON file, use VIA's sideload feature.
 
 The app toolbar is intentionally outside the tab sequence while testing keys and is operated with a pointer. Settings and the device chooser remain keyboard accessible. Resetting website data requires entering the exact tool name; it affects only that tool.
 
@@ -52,7 +52,7 @@ VIA-L starts on the display under the pointer at **1676 × 1124** macOS points w
 
 ## Security and data
 
-The online sites run in isolated web views without Node integration or an app preload. Document navigation is restricted to each site's HTTPS origin. External links require confirmation before opening in the default browser. Each site has its own persistent Chromium partition. Switching closes the previous view. WebHID is allowed only for the active tool with an explicit device choice; other permissions are denied by default.
+The online sites run in isolated web views without Node integration or an app preload. Document navigation is restricted to each site's HTTPS origin. External links require confirmation before opening in the default browser. Each site has its own persistent Chromium partition. Switching closes the previous view. WebHID is allowed only for the active tool with an explicit device choice. The active Vial view can read and write individual files selected through Chromium's file picker; directory access remains blocked. Other permissions are denied by default.
 
 Preferences, zoom, and website data are stored locally in the user profile. VIA-L has no separate cloud, telemetry, or background service. The online sites may use their own resources and services; their operators control that data processing. Resetting a tool clears its website data and switches to a fresh partition. A full app restart requires granting device access again.
 

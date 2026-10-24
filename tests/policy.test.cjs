@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { TOOLS, isTool, isAllowedDocument, isExternalHttpUrl, mayUseHid } = require('../dist/policy.js');
+const { TOOLS, isTool, isAllowedDocument, isExternalHttpUrl, mayUseHid, mayUseLayoutFile } = require('../dist/policy.js');
 const { HidChooser } = require('../dist/chooser.js');
 
 test('documents require exact per-tool HTTPS origin', () => {
@@ -40,6 +40,24 @@ test('HID gate requires current contents, main frame, matching requesting URL AN
       assert.equal(mayUseHid(tool, site.url, origin, true, true), false);
       assert.equal(mayUseHid(tool, url, site.origin, true, true), false);
     }
+  }
+});
+
+test('Vial layout file access requires active origin, individual file and known access type', () => {
+  const details = { filePath: '/tmp/layout.vil', isDirectory: false, fileAccessType: 'writable', isMainFrame: false };
+  const allow = (tool = 'vial', url = TOOLS.vial.url, origin = TOOLS.vial.origin, file = details, active = true) =>
+    mayUseLayoutFile(tool, url, origin, file, active);
+  assert.ok(allow()); // Electron always reports false for fileSystem isMainFrame.
+  assert.ok(allow('vial', TOOLS.vial.url, `${TOOLS.vial.origin}/`, { ...details, fileAccessType: 'readable' }));
+  assert.equal(allow('vial', TOOLS.vial.url, TOOLS.vial.origin, details, false), false);
+  for (const tool of ['via', 'venom', 'wootility']) assert.equal(allow(tool, TOOLS[tool].url, TOOLS[tool].origin), false);
+  for (const url of ['https://vial.rocks.evil.test/', 'https://vial.rocks:8443/', 'http://vial.rocks/', TOOLS.via.url]) {
+    assert.equal(allow('vial', url), false);
+    assert.equal(allow('vial', TOOLS.vial.url, url), false);
+  }
+  for (const file of [{}, { ...details, isDirectory: true }, { ...details, isDirectory: undefined },
+    { ...details, filePath: '' }, { ...details, fileAccessType: 'unknown' }]) {
+    assert.equal(allow('vial', TOOLS.vial.url, TOOLS.vial.origin, file), false);
   }
 });
 

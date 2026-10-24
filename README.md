@@ -8,11 +8,11 @@
 
 VIA-L lädt die **Online-Versionen** der vier Tools und ergänzt eine lokale Geräteauswahl für WebHID. Eine Internetverbindung ist erforderlich. VIA-L ist ein unabhängiges Projekt und gehört zu keinem der vier Originalprojekte.
 
-Neu in Version 0.2.5: Wartungs- und Sicherheitsupdate mit Electron 44.9.1. Die Funktionen von VIA, Vial, Venom und Wootility bleiben erhalten.
+Neu in Version 0.2.6: Behebt das Speichern und Laden von Vial-Layouts im `.vil`-Format.
 
-Version 0.2.5 wurde mit **VIA, Vial, Venom und Wootility** erfolgreich in der Praxis getestet.
+Der Vial-Layout-Fix wurde am korrigierten lokalen Build getestet und für gut befunden.
 
-**Downloads für Version 0.2.5:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.5/VIA-L-0.2.5-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.5/VIA-L-0.2.5-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
+**Downloads für Version 0.2.6:** [Apple Silicon (arm64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-arm64.zip) · [Intel (x64)](https://github.com/r3d42-git/R3Ds-VIA-L/releases/download/v0.2.6/VIA-L-0.2.6-macOS-x64.zip) · macOS 13 oder neuer · signiert und von Apple notarisiert.
 
 Wähle unter ** → Über diesen Mac**: Bei „Chip: Apple …“ passt Apple Silicon, bei „Prozessor: Intel …“ passt Intel. Beide ZIPs enthalten dieselbe App für den jeweiligen Prozessor.
 
@@ -23,7 +23,7 @@ Das ZIP entpacken und **VIA-L.app** in den Programme-Ordner verschieben. Neue Ve
 1. VIA, Vial, Venom oder Wootility in der oberen Leiste wählen. Beim Wechsel wird die bisherige Webansicht geschlossen; ungesicherte Änderungen auf der Webseite können verloren gehen.
 2. Auf der Originalseite eine Verbindung anfordern: bei VIA über **„Gerät autorisieren +“**, bei Vial über **„Start Vial“**, bei Venom über **„Connect“**, bei Wootility über **„Initialisiere ein Gerät“ → „Erlaube dem Browser“**. In VIA-L das angebotene Gerät markieren und **„Verbinden“** wählen. Die Auswahl gibt kein Gerät ohne Bestätigung frei.
 3. Tastenbelegungen und Layouts direkt im gewählten Tool anpassen.
-4. Import und Export über die Funktionen des jeweiligen Tools nutzen. Für eine VIA-JSON-Datei steht die Sideload-Funktion von VIA zur Verfügung.
+4. Import und Export über die Funktionen des jeweiligen Tools nutzen. Vial speichert `.vil`-Layouts über **File → Save current layout…** und lädt sie über **File → Load saved layout…**. Für eine VIA-JSON-Datei steht die Sideload-Funktion von VIA zur Verfügung.
 
 Die App-Leiste ist während eines Tastentests bewusst aus der Tab-Reihenfolge genommen und per Maus bedienbar. Einstellungen und Geräteauswahl bleiben per Tastatur bedienbar. Beim Löschen von Websitedaten muss der Name des betroffenen Tools exakt eingegeben werden. Der Reset betrifft nur dieses Tool.
 
@@ -52,7 +52,7 @@ VIA-L startet auf dem Bildschirm unter dem Mauszeiger mit **1676 × 1124** macOS
 
 ## Schutz und Daten
 
-Die Online-Seiten laufen in isolierten Webansichten ohne Node-Integration oder App-Preload. Dokumentnavigation ist auf die jeweilige HTTPS-Origin beschränkt. Externe Links benötigen eine Bestätigung, bevor der Standardbrowser sie öffnet. Jede Seite erhält eine eigene persistente Chromium-Partition. Der Wechsel schließt die vorherige Webansicht. WebHID wird nur für das aktive Tool und eine konkrete Geräteauswahl zugelassen; andere Berechtigungen werden standardmäßig abgelehnt.
+Die Online-Seiten laufen in isolierten Webansichten ohne Node-Integration oder App-Preload. Dokumentnavigation ist auf die jeweilige HTTPS-Origin beschränkt. Externe Links benötigen eine Bestätigung, bevor der Standardbrowser sie öffnet. Jede Seite erhält eine eigene persistente Chromium-Partition. Der Wechsel schließt die vorherige Webansicht. WebHID wird nur für das aktive Tool und eine konkrete Geräteauswahl zugelassen. Die aktive Vial-Ansicht darf einzelne über Chromiums Dateidialog gewählte Dateien lesen und schreiben; Verzeichniszugriff bleibt gesperrt. Andere Berechtigungen werden standardmäßig abgelehnt.
 
 Einstellungen, Zoom und Websitedaten werden lokal im Benutzerprofil gespeichert. VIA-L hat keine eigene Cloud, keine eigene Telemetrie und keinen Hintergrunddienst. Die Online-Seiten können eigene Ressourcen und Dienste nutzen; deren Datenverarbeitung liegt bei den jeweiligen Betreibern. Der Reset in den Einstellungen löscht die Daten des gewählten Tools und wechselt zu einer neuen Partition. Nach einem vollständigen App-Neustart ist eine erneute Gerätefreigabe erforderlich.
 

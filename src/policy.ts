@@ -50,3 +50,17 @@ export function mayUseHid(
   return isCurrentContents && isMainFrame && isAllowedDocument(tool, requestingUrl)
     && isExactToolOrigin(tool, requestingOrigin);
 }
+
+/** Chromium still requires a user-selected File System Access handle. */
+export function mayUseLayoutFile(
+  tool: Tool,
+  documentUrl: string,
+  requestingOrigin: string,
+  details: { filePath?: string; isDirectory?: boolean; fileAccessType?: string },
+  isCurrentContents: boolean,
+): boolean {
+  return isCurrentContents && tool === 'vial' && isAllowedDocument(tool, documentUrl)
+    && isExactToolOrigin(tool, requestingOrigin) && details.isDirectory === false
+    && typeof details.filePath === 'string' && details.filePath.length > 0
+    && (details.fileAccessType === 'readable' || details.fileAccessType === 'writable');
+}

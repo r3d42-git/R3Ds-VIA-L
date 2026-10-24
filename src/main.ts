@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from '
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { HidChooser, type ChoiceSnapshot, type HidChoice } from './chooser';
-import { isAllowedDocument, isExternalHttpUrl, isTool, mayUseHid, TOOLS, type Tool } from './policy';
+import { isAllowedDocument, isExternalHttpUrl, isTool, mayUseHid, mayUseLayoutFile, TOOLS, type Tool } from './policy';
 import { fitWindowToWorkArea } from './window-geometry';
 
 interface Preferences {
@@ -158,11 +158,27 @@ function configureSession(ses: Session, key: string): void {
   if (configuredSessions.has(key)) return;
   configuredSessions.add(key);
   ses.setPermissionCheckHandler((contents, permission, requestingOrigin, details) => {
-    if (permission !== 'hid' || !contents || contents !== currentContents() || contents.session !== ses) return false;
+    if (permission === 'fileSystem') {
+      // Electron checks handle grants with null WebContents, no requestingUrl and
+      // isMainFrame=false. Bind them to the active session/document and origin;
+      // Chromium still owns the file picker/handle grants. Deny directories.
+      const current = currentContents();
+      return !!current && mayUseLayoutFile(activeTool, current.getURL(), requestingOrigin, details,
+        current.session === ses && (!contents || contents === current) && !changing && !quitting);
+    }
+    if (!contents || contents !== currentContents() || contents.session !== ses) return false;
+    if (permission !== 'hid') return false;
     return mayUseHid(activeTool, details.requestingUrl || '', requestingOrigin, details.isMainFrame, true)
       && isAllowedDocument(activeTool, contents.getURL());
   });
   ses.setPermissionRequestHandler((contents, permission, callback, details) => {
+    if (permission === 'fileSystem') {
+      let origin = '';
+      try { origin = new URL(details.requestingUrl).origin; } catch { /* Deny missing/invalid origins. */ }
+      callback(mayUseLayoutFile(activeTool, contents.getURL(), origin, details as Electron.FilesystemPermissionRequest,
+        contents === currentContents() && contents.session === ses && !changing && !quitting));
+      return;
+    }
     const allow = permission === 'hid' && contents === currentContents() && contents.session === ses
       && mayUseHid(activeTool, details.requestingUrl, TOOLS[activeTool].origin, details.isMainFrame, true)
       && isAllowedDocument(activeTool, contents.getURL());
