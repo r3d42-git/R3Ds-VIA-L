@@ -1,14 +1,10 @@
-VIA-L 0.2.7 ist ein Wartungsrelease mit aktualisierter Laufzeit: Electron 45.0.0 (zuvor 44.9.1), Chromium 156.0.8078.48 und Node.js 24.22.0. Änderungen an der Anwendungslogik gab es nicht.
+VIA-L 0.2.8 aktualisiert Electron von 45.0.0 auf 45.5.0 und Chromium auf 156.0.8078.109. Damit übernimmt VIA-L unter anderem eine Korrektur für die Erkennung der macOS-Kontrasteinstellung in Webinhalten. [Änderungen in Electron 45.5.0](https://github.com/electron/electron/releases/tag/v45.5.0)
 
-- Die Paketierung unterstützt jetzt auch Electrons verzögerten Binärdownload nach einer frischen Installation der Build-Abhängigkeiten.
-- Der Nutzer hat den Electron-45-Testbuild mit **VIA, Vial, Venom und Wootility** geprüft und bestätigt, dass alle vier Tools funktionieren.
-- Bekannter Hinweis: Wootility benötigt in der Nutzerumgebung derzeit zwei Verbindungsversuche, auch nach vollständigem Beenden und Neustart. Die Ursache ist noch ungeklärt. Der Wartungsrelease wird auf Wunsch des Nutzers veröffentlicht; das Verhalten wird für eine spätere gezielte Untersuchung beschrieben.
+Die automatisierten App-Tests haben VIA, Vial, Venom und Wootility mit der neuen Laufzeit geprüft, einschließlich Geräteauswahl, Werkzeugwechsel und getrennter Einstellungen. Auch Tastaturfokus, Zurücksetzen und drei Fenstergrößen wurden erfolgreich geprüft.
 
-Mit Electron 45 geprüft: 23 Tests, 23 App-Prüfungen, Fokus-/Reset-Verhalten und drei Fenstergrößen erfolgreich. Vials originale Speichern-/Laden-Funktionen wurden mit nativen Dateidialogen und einer synthetischen Unicode-Layoutdatei geprüft; der Inhalt blieb bytegenau erhalten. `npm audit` meldet keine bekannten Schwachstellen.
+**Downloads für macOS 13 oder neuer**
 
-**Downloads:**
+- Apple Silicon (M-Chips) · `VIA-L-0.2.8-macOS-arm64.zip`
+- Intel · `VIA-L-0.2.8-macOS-x64.zip`
 
-- Apple Silicon: `VIA-L-0.2.7-macOS-arm64.zip`.
-- Intel: `VIA-L-0.2.7-macOS-x64.zip`.
-
-Beide Varianten benötigen **macOS 13 oder neuer** und eine Internetverbindung. Sie sind mit Developer ID signiert, von Apple notarisiert und mit angeheftetem Ticket geprüft. Zu jedem ZIP gehört eine SHA-256-Prüfsumme. Zum Aktualisieren VIA-L regulär beenden, das passende ZIP entpacken und **VIA-L.app** im Programme-Ordner ersetzen. Websitedaten und Einstellungen bleiben erhalten; nach dem Neustart die Tastatur erneut autorisieren.
+Beide Apps sind mit Developer ID signiert und von Apple notarisiert. Zu jedem ZIP gehört eine SHA-256-Prüfsumme. Für das Update VIA-L beenden, das passende ZIP entpacken und die bisherige App im Programme-Ordner ersetzen.
